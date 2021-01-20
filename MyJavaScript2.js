@@ -30,7 +30,7 @@ function GetTextEmojiByTickerSituation() {
     e += LastCy > 0 ? "✔" : "";
 
     e += Volume > 1.3 * [is5] ? "🥶" : "";
-    // e +=  "";
+    // e +=  ""; 
     e = Ccy < 0 ? "😈" : e; // 😡😈😈👹👹😈😈😈😡
 
     (cfield2) = e; //  (cfield0) = e!="" ? e : (cfield0);
