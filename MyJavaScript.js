@@ -4,7 +4,7 @@
 MT = 10e6;
 BT = 10e9;
 function TsPrecondition() {
-    return Precondition = ((ct).Buy_CountI + (ct).Sell_CountI > 30 && [is5] * Close > 0.5 * BT);
+    return Precondition = (TheHistoryData.Buy_CountI + TheHistoryData.Sell_CountI > 30 && [is5] * Close > 0.5 * BT);
 }
 function TsPreconditionMatch() { // جزییات شرایط‌مسابقه‌بورسی
     bish_az_50000_Volume = Volume > 50000;
@@ -205,18 +205,18 @@ function TsOfteZaidajmeHigh() {
 }
 // ________________________________________________________________________________________________  حقیقی
 function GetEachNeutralVolumeSell() {
-    Nat_sell_shomar = (ct).Sell_CountI > 0 ? (ct).Sell_CountI : 1;
-    Nat_avg_vol_sell = (ct).Sell_I_Volume / Nat_sell_shomar;
+    Nat_sell_shomar = TheHistoryData.Sell_CountI > 0 ? TheHistoryData.Sell_CountI : 1;
+    Nat_avg_vol_sell = TheHistoryData.Sell_I_Volume / Nat_sell_shomar;
     return Nat_avg_vol_sell;
 }
 function GetEachNeutralVolumeBuy() {
-    Nat_buy_shomar = (ct).Buy_CountI > 0 ? (ct).Buy_CountI : 1;
-    EachNeutralVolumeBuy = (ct).Buy_I_Volume / Nat_buy_shomar;
+    Nat_buy_shomar = TheHistoryData.Buy_CountI > 0 ? TheHistoryData.Buy_CountI : 1;
+    EachNeutralVolumeBuy = TheHistoryData.Buy_I_Volume / Nat_buy_shomar;
     return EachNeutralVolumeBuy;
 }
 function GetNeutralVolume() {
     Nat_avg_vol = GetEachNeutralVolumeBuy() - GetEachNeutralVolumeSell();
-    Nat_All_Vol = Nat_avg_vol > 0 ? Nat_avg_vol * (ct).Buy_CountI : Nat_avg_vol * (ct).Sell_CountI;
+    Nat_All_Vol = Nat_avg_vol > 0 ? Nat_avg_vol * TheHistoryData.Buy_CountI : Nat_avg_vol * TheHistoryData.Sell_CountI;
     return Nat_All_Vol;
 }
 function GetNeutralValue() {
@@ -314,7 +314,7 @@ function TsNeutral2Juridical() {
 }
 // ________________________________________________________________________________________________  حقوقی
 function GetJuridicalVolume() {
-    return Jur_All_Vol = (ct).Buy_N_Volume - (ct).Sell_N_Volume;
+    return Jur_All_Vol = TheHistoryData.Buy_N_Volume - TheHistoryData.Sell_N_Volume;
 }
 function GetJuridicalValue() {
     return Jur_Rial = Close * (GetJuridicalVolume());
@@ -332,7 +332,7 @@ function GetJuridicalBuyMa90() {
     return miangin_Buy_hoquqi_3mah = Close * ([is54] - [is74]);
 }
 function GetJuridicalSellVolumeRatioTo3Month() {
-    JuridicalSellVolumeRatioTo3Month = 100 * (ct).Sell_N_Volume / [is74];
+    JuridicalSellVolumeRatioTo3Month = 100 * TheHistoryData.Sell_N_Volume / [is74];
     // [is50] میانگین حجم خرید حقیقی در 3 ماه گذشته
     // [is58] میانگین تعداد خریدار حقیقی در 3 ماه گذشته
     return JuridicalSellVolumeRatioTo3Month;
@@ -368,7 +368,7 @@ function JuridicalWhale3() {
 function JuridicalPowerfullSell() {
     // GetJuridicalRatioMonth() < -500;
     // GetJuridicalRatioBazaar() < -50;
-    // (ct).Sell_N_Volume * Close > 50e9;
+    // TheHistoryData.Sell_N_Volume * Close > 50e9;
     return ((GetJuridicalRatioMonth() < -100 && GetJuridicalRatioToday() < -30 && GetJuridicalValue() < -100 * MT) || GetJuridicalValue() < -1.5 * BT || GetJuridicalRatioMonth() < -250 || GetJuridicalRatioToday() < -90 || GetJuridicalRatioBazaar() < -35); // && (GetJuridicalRatioMonth() < -1 && TsPrecondition() );
 }
 function JuridicalWhaleSell1() {
