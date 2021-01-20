@@ -4,12 +4,12 @@
 MT = 10e6;
 BT = 10e9;
 function TsPrecondition() {
-    return Precondition = (TheHistoryData.Buy_CountI + TheHistoryData.Sell_CountI > 30 && [is5] * Close > 0.5 * BT);
+    return Precondition = (TheHistoryData.Buy_CountI + TheHistoryData.Sell_CountI > 30 && VolumeMa90 * Close > 0.5 * BT);
 }
 function TsPreconditionMatch() { // جزییات شرایط‌مسابقه‌بورسی
     bish_az_50000_Volume = Volume > 50000;
     Queuee_Buy = ((pd1A) == MaximumDayLimit && (qd1A) != 0);
-    Taqaza_KamtarAz_Miangin_Mah = (qd1A) < GetVolumeMa30(); // sar_khati_az_miangin_se_mahe_kamtar_bashad = (qd1A) < [is5] ;
+    Taqaza_KamtarAz_Miangin_Mah = (qd1A) < GetVolumeMa30(); // sar_khati_az_miangin_se_mahe_kamtar_bashad = (qd1A) < VolumeMa90 ;
     Volume_BozorgtarAz_Mabna = Volume > VolumeMABNA;
 
     // شرایط مسابقه بورسی جمع بندی
@@ -29,8 +29,8 @@ function GetTextEmojiByTickerSituation() {
     e += (pl) > Open ? "✔" : "";
     e += LastCy > 0 ? "✔" : "";
 
-    e += Volume > 1.3 * [is5] ? "🥶" : "";
-    // e +=  ""; 
+    e += Volume > 1.3 * VolumeMa90 ? "🥶" : "";
+    // e +=  "";
     e = Ccy < 0 ? "😈" : e; // 😡😈😈👹👹😈😈😈😡
 
     (cfield2) = e; //  (cfield0) = e!="" ? e : (cfield0);
@@ -142,7 +142,7 @@ function GetVolume() {
     return Volume = Volume > 0 ? Volume : 1;
 }
 function GetVolumeRatioMonth() {
-    return Volume_Perc_Month = 100 * GetVolume() / [is5];
+    return Volume_Perc_Month = 100 * GetVolume() / VolumeMa90;
 }
 function GetVolumeRatioBazaar() {
     return Volume_Perc_Bazaar = 100 * GetVolume() / TotalShares;
@@ -162,11 +162,11 @@ function GetVolumeMa30() { //  پیدا کردن میانگین حجم تقری�
         }
     VolumeMaah /= j;
     //
-    VolumeMaah = Math.min(VolumeMaah, [is5]);
+    VolumeMaah = Math.min(VolumeMaah, VolumeMa90);
     return VolumeMaah;
 }
 function GetArzeshDadOSetad() {
-    return Arzesh_DadOSetad = [is5] * Close;
+    return Arzesh_DadOSetad = VolumeMa90 * Close;
 }
 // _____ پالایه
 function TsLowVolume() {
@@ -190,10 +190,10 @@ function TsValueWhales() {
     return Value > 100e10;
 }
 function TsVolumeHigh2() {
-    return Volume_High = Volume > 1.5 * [is5] && Value > 20e10;
+    return Volume_High = Volume > 1.5 * VolumeMa90 && Value > 20e10;
 }
 function TsVolumeVeryHigh() {
-    return VolumeVeryHigh = Volume > 1.7 * [is5] && Value > 50e10;
+    return VolumeVeryHigh = Volume > 1.7 * VolumeMa90 && Value > 50e10;
 }
 function TsArzeshDadosetadBala() {
     return Arzesh_DadOSetad_Bala = GetArzeshDadOSetad() > 50 * BT;
@@ -226,7 +226,7 @@ function GetNeutralRatioToday() {
     return Nat_Perc = 100 * GetNeutralVolume() / GetVolume();
 }
 function GetNeutralRatioMonth() {
-    return Nat_Perc_Month = 100 * GetNeutralVolume() / [is5];
+    return Nat_Perc_Month = 100 * GetNeutralVolume() / VolumeMa90;
 }
 function GetNeutralRatioBazaar() {
     return Nat_Perc_Bazaar = 100 * GetNeutralVolume() / TotalShares; // 100 beacause its small value
@@ -235,10 +235,10 @@ function GetEachNeutralValue() {
     return Nat_Rial_Each = (Close * (GetEachNeutralVolumeBuy() - GetEachNeutralVolumeSell())); // Math.round
 }
 function GetEachNeutralBuyMa90() {
-    return miangin_sarane_3mah_haqiqi_Buy = Close * [is50] / [is58];
+    return miangin_sarane_3mah_haqiqi_Buy = Close * NeutralBuyVolumeMa90 / NeutralBuyCountMa90;
 }
 function GetNeutralBuyVolumeEach3Month() {
-    NeutralBuyVolumeEach3Month = [is50] / [is58];
+    NeutralBuyVolumeEach3Month = NeutralBuyVolumeMa90 / NeutralBuyCountMa90;
     return NeutralBuyVolumeEach3Month;
 }
 function GetNeutralBuyVolumeEachRatioTo3Month() {
@@ -246,14 +246,14 @@ function GetNeutralBuyVolumeEachRatioTo3Month() {
     return NeutralBuyVolumeEachRatioTo3Month;
 }
 function GetNeutralSellVolumeEach3Month() {
-    NeutralSellVolumeEach3Month = [is70] / [is78];
-    // [is70] میانگین حجم فروش حقیقی در 3 ماه گذشته
-    // [is78] میانگین تعداد فروشنده حقیقی در 3 ماه گذشته
+    NeutralSellVolumeEach3Month = NeutralSellVolume90 / NeutralSellCount90;
+    // NeutralSellVolume90 میانگین حجم فروش حقیقی در 3 ماه گذشته
+    // NeutralSellCount90 میانگین تعداد فروشنده حقیقی در 3 ماه گذشته
     return NeutralSellVolumeEach3Month;
 }
 function GetNeutralSellVolumeEachRatioTo3Month() {
     NeutralSellVolumeEachRatioTo3Month = 100 * GetEachNeutralVolumeSell() / GetNeutralSellVolumeEach3Month();
-    // [is74] میانگین حجم فروش حقوقی در 3 ماه گذشته
+    // JuridicalSellVolume90 میانگین حجم فروش حقوقی در 3 ماه گذشته
     return NeutralSellVolumeEachRatioTo3Month;
 }
 function GetNeutralText() {
@@ -323,18 +323,18 @@ function GetJuridicalRatioToday() {
     return Jur_Perc = 100 * GetJuridicalVolume() / GetVolume();
 }
 function GetJuridicalRatioMonth() {
-    return Jur_Perc_Month = 100 * GetJuridicalVolume() / [is5];
+    return Jur_Perc_Month = 100 * GetJuridicalVolume() / VolumeMa90;
 }
 function GetJuridicalRatioBazaar() {
     return Jur_Perc_Bazaar = 100 * GetJuridicalVolume() * 100 / TotalShares;
 }
 function GetJuridicalBuyMa90() {
-    return miangin_Buy_hoquqi_3mah = Close * ([is54] - [is74]);
+    return miangin_Buy_hoquqi_3mah = Close * (JuridicalBuyVolumeMa90 - JuridicalSellVolume90);
 }
 function GetJuridicalSellVolumeRatioTo3Month() {
-    JuridicalSellVolumeRatioTo3Month = 100 * TheHistoryData.Sell_N_Volume / [is74];
-    // [is50] میانگین حجم خرید حقیقی در 3 ماه گذشته
-    // [is58] میانگین تعداد خریدار حقیقی در 3 ماه گذشته
+    JuridicalSellVolumeRatioTo3Month = 100 * TheHistoryData.Sell_N_Volume / JuridicalSellVolume90;
+    // NeutralBuyVolumeMa90 میانگین حجم خرید حقیقی در 3 ماه گذشته
+    // NeutralBuyCountMa90 میانگین تعداد خریدار حقیقی در 3 ماه گذشته
     return JuridicalSellVolumeRatioTo3Month;
 }
 function GetJuridicalText() {
@@ -391,7 +391,7 @@ function GetNjRatioToday() {
     return Nat_Jur_Perc = 100 * (GetNjVolume()) / GetVolume();
 }
 function GetNjRatioMonth() {
-    return Nat_Jur_Perc_Month = 100 * (GetNjVolume()) / [is5];
+    return Nat_Jur_Perc_Month = 100 * (GetNjVolume()) / VolumeMa90;
 }
 function GetNjRatioBazaar() {
     return Nat_Jur_Perc_Bazaar = 100 * GetNjVolume() * 100 / TotalShares;
@@ -416,7 +416,7 @@ function TsNjBothBuy() {
     return NJKhoob;
 }
 function GetEachNeutralSellMa90() {
-    return miangin_sarane_3mah_haqiqi_forush = Close * [is70] / [is78];
+    return miangin_sarane_3mah_haqiqi_forush = Close * NeutralSellVolume90 / NeutralSellCount90;
 }
 function TsNjBuy() { // مسابقه هفتگی981027 //نتایج متوسط
     Match981027 = GetEachNeutralVolumeBuy() * Close < GetEachNeutralSellMa90()
@@ -465,7 +465,7 @@ function TsBuyingAbility() {
     return filter_of_ability = GetSupplyDemandRatioToday() < 300 && GetSupplyDemandRatioToday() > 100;
 }
 function GetSupplyDemandRatioMonth() {
-    return Supply_Demand_Perc_Month = (100 * GetSupplyDemandValue() / Close) / [is5];
+    return Supply_Demand_Perc_Month = (100 * GetSupplyDemandValue() / Close) / VolumeMa90;
 }
 function GetSupplyDemandRatioMonth2() {
     return Supply_Demand_Perc_Month = 100 * (qd1A) / GetVolumeMa30();
@@ -585,7 +585,7 @@ function TsQueue_Buy_va_Volume_High() { //   صف خرید و حجم زیاد
     return Queue_Buy_va_Volume_High = (pl) == MaximumDayLimit && Value > 100e9;
 }
 function TsQueueLowVolume() {
-    return (pd1A) == MaximumDayLimit && (qd1A) != 0 && Value > 1 * [is1]; // صف خرید و حجم بسیار;
+    return (pd1A) == MaximumDayLimit && (qd1A) != 0 && Value > 1 * ValueMa90; // صف خرید و حجم بسیار;
 }
 function TsPowerfulSupply1() { // صف خرید سنگین
     return GetSupplyDemandRatioBazaar() > 100;
@@ -594,7 +594,7 @@ function TsPowerfulSupply() {
     return GetSupplyDemandRatioToday() < -10 && GetSupplyDemandValue() < -40040 * BT; // نیرومندترین عرضه حال حاضر *;
 }
 function TsPowerfulDemand2() {
-    return (GetSupplyDemandRatioMonth() > 400 || GetSupplyDemandRatioBazaar() > 400) && GetSupplyDemandValue() > 500 * MT && [is5] * Close > 0.5 * BT;
+    return (GetSupplyDemandRatioMonth() > 400 || GetSupplyDemandRatioBazaar() > 400) && GetSupplyDemandValue() > 500 * MT && VolumeMa90 * Close > 0.5 * BT;
 }
 function TsPowerfulDemand3() {
     return GetSupplyDemandRatioMonth() > 300 && GetSupplyDemandValue() / Value > 6;
@@ -618,7 +618,7 @@ function TsPowerfulDemand6() {
     return GetSupplyDemandRatioMonth() > 70 && GetSupplyDemandRatioMonth() < 125;
 }
 function TsPowerfulDemand7() {
-    return (GetSupplyDemandRatioMonth() > 200 || GetSupplyDemandRatioBazaar() > 100) && GetSupplyDemandValue() > 1 * BT && [is5] * Close > 0.5e10;
+    return (GetSupplyDemandRatioMonth() > 200 || GetSupplyDemandRatioBazaar() > 100) && GetSupplyDemandValue() > 1 * BT && VolumeMa90 * Close > 0.5e10;
 }
 function TsPowerfulDemandEachBuyer() { // میانگین سفارش هر کد بالا
     return (GetSupplyDemandRatioMonth() < 40 && GetSupplyDemandValue() > 1 * BT) && GetDemandEachValue() > 50 * MT; // (GetSupplyDemandRatioMonth() >30 && GetSupplyDemandRatioBazaar() > 30 && GetSupplyDemandValue()> 10e9)  && GetDemandEachValue()  > 250*MT;
@@ -639,7 +639,7 @@ function TsSmallSupplyEachSeller() { // میانگین سفارش هر کد پا
     return (GetSupplyDemandRatioMonth() < -30 && GetSupplyDemandRatioBazaar() < -30 && GetSupplyDemandValue() < -1 * BT) && GetSupplyEachValue() > 25 * MT;
 }
 function TsPowerfulSupply() { //سفارشهای‌نیرومندفروش*
-    return (GetSupplyDemandRatioMonth() < -100 || GetSupplyDemandRatioBazaar() < -100) && GetSupplyDemandValue() < -1 * BT && [is5] * Close > 0.5 * BT;
+    return (GetSupplyDemandRatioMonth() < -100 || GetSupplyDemandRatioBazaar() < -100) && GetSupplyDemandValue() < -1 * BT && VolumeMa90 * Close > 0.5 * BT;
 }
 function TsSmallSupply() { // صف‌های سبک
     return GetSupplyDemandRatioMonth() > -10 && LastCy < -2.8 && GetNeutralRatioMonth() > 0;
@@ -651,7 +651,7 @@ function TsSmallSupply2() { // صف‌های سبک
 function TsDailyRiseWithPowerfulBuy() {
     Candle1 = Ccy > 0 && Cy > 0 && LastCy > 0;
     Nj1 = GetNeutralRatioToday() > 0 && GetJuridicalRatioToday() >= 0;
-    Volume1 = GetVolume() > 2 * [is5];
+    Volume1 = GetVolume() > 2 * VolumeMa90;
     return Candle1 && Nj1 && Volume1; // هنوز روند دارند;
 }
 function TsRange3() {
@@ -730,7 +730,7 @@ function Llv(Days) {
     return low;
 }
 function TsLlv1() {
-    return llv(59) == Cy && Ccy > 0 && GetVolume() > [is5]; // چندین روز منفی و سپس حجم بسیار و مثبت خوب // رشد از کف *;
+    return llv(59) == Cy && Ccy > 0 && GetVolume() > VolumeMa90; // چندین روز منفی و سپس حجم بسیار و مثبت خوب // رشد از کف *;
 }
 function TsLlv2() {
     return llv(59) == Cy && Ccy < -3 && GetVolumeRatioMonth() < 100; // کف‌یابی // چندین روز منفی و حجم کم و منفی زیاد;
@@ -743,7 +743,7 @@ function TsDailyFallButPowerfulBuy2() {
     return (GetNeutralRatioBazaar() < -25 || GetJuridicalRatioBazaar() <  - 25 || GetNjRatioBazaar() <  - 40 || GetVolumeRatioMonth() < 33) && TsPrecondition() && Ccy < -2; // منفی و اتفاق منفی;
 }
 function TsFallRiseChangeAndVolume() {
-    return Ccy < -2.5 && Value > 2 * [is1] && Ccy < LastCy - 1; // حجم بالا در منفی و آخرین بالاتر *;
+    return Ccy < -2.5 && Value > 2 * ValueMa90 && Ccy < LastCy - 1; // حجم بالا در منفی و آخرین بالاتر *;
 }
 // ____ ایده
 function TsLlvIdeas____________________________________() {
